@@ -25,14 +25,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Lowercase repository name
-        run: echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/sentiment-api" | tr '[:upper:]' '[:lower:]' >> $GITHUB_ENV
+      - name: Set lowercased image name # <--- NEW STEP NAME
+        run: |
+          # 1. Lowercase the repository owner name
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          # 2. Construct the full image tag
+          IMAGE_TAG="ghcr.io/${REPO_OWNER_LOWER}/sentiment-api"
+          # 3. Set the environment variable with the correct key (IMAGE_NAME)
+          echo "IMAGE_NAME=${IMAGE_TAG}" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
+          # This should now work correctly, e.g., ghcr.io/user/repo:latest
           tags: ${{ env.IMAGE_NAME }}:latest,${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-  # Removed deploy job — deployment to local Kind happens manually/locally
