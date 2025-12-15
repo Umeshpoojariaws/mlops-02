@@ -1,0 +1,7 @@
+preprocess:
+  test_size: 0.2
+  random_state: 42
+train:
+  n_trials: 50
+  cv: 5
+  smote: true

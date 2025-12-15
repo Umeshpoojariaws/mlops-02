@@ -1,0 +1,36 @@
+stages:
+  ingest:
+    cmd: python src/data_ingest.py
+    deps:
+    - src/data_ingest.py
+    outs:
+    - data/raw/reddit_comments.csv
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - data/raw/reddit_comments.csv
+    - src/preprocess.py
+    params:
+    - params.yaml:preprocess
+    outs:
+    - data/processed/train.csv
+    - data/processed/test.csv
+  train:
+    cmd: python src/train.py
+    deps:
+    - data/processed/train.csv
+    - src/train.py
+    params:
+    - params.yaml:train
+    outs:
+    - models/model.pkl
+    metrics:
+    - metrics.json
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - data/processed/test.csv
+    - models/model.pkl
+    - src/evaluate.py
+    metrics:
+    - eval_metrics.json

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentiment-api
+  template:
+    metadata:
+      labels:
+        app: sentiment-api
+    spec:
+      containers:
+      - name: api
+        image: ghcr.io/<username>/sentiment-api:latest  # Update with your GHCR
+        ports:
+        - containerPort: 8000
+        imagePullSecrets:
+        - name: ghcr-secret  # Create secret with GHCR token

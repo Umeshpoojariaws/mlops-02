@@ -1,0 +1,24 @@
+name: CI/CD
+on: [push]
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GHCR_TOKEN }}
+    - name: Build and Push
+      run: |
+        docker build -t ghcr.io/$$ {{ github.repository_owner }}/sentiment-api: $${{ github.sha }} .
+        docker push ghcr.io/$$ {{ github.repository_owner }}/sentiment-api: $${{ github.sha }}
+  deploy:  # Note: For local Kind, manually apply or use local script; Actions can kubectl apply if Kind is remote-accessible (not typical for local)
+    needs: build-push
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy to Kind (Placeholder; adapt for local apply)
+      run: echo "For local: kubectl apply -f k8s/"  # Use local script to pull/deploy
