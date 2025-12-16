@@ -8,10 +8,10 @@ stages:
   preprocess:
     cmd: python src/preprocess.py
     deps:
-    - data/raw/reddit_comments.csv
+    - data/raw/Reddit_Data.csv
     - src/preprocess.py
     params:
-    - params.yaml:preprocess
+    - params.yaml:preprocess  # <--- MUST MATCH THE KEY EXACTLY
     outs:
     - data/processed/train.csv
     - data/processed/test.csv
