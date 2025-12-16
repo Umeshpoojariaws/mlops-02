@@ -4,7 +4,7 @@ stages:
     deps:
     - src/data_ingest.py
     outs:
-    - data/raw/reddit_comments.csv
+    - data/raw/Reddit_Data.csv
   preprocess:
     cmd: python src/preprocess.py
     deps:
